@@ -230,7 +230,7 @@ PDFAnnotate.prototype.savePdf = function () {
 	    }
 	    doc.addImage(fabricObj.toDataURL({format:"jpeg",quality:0.9}), 'jpg', 0, 0);
 	});
-	doc.save('sample.pdf');
+	doc.save('CopieAnnotee.pdf');
 	}
 	});
 };
@@ -240,7 +240,7 @@ PDFAnnotate.prototype.saveJSON = function(){
 	var inst = this;
 	var fichierjson = this.makeJSON();
 	var text = JSON.stringify(fichierjson,null,4);
-	var name = "eleves.json";
+	var name = "AnnotationsEtBareme.json";
 	var type = "application/json";
 	var file = new Blob([text], {type: type});
         var isIE = /*@cc_on!@*/false || !!document.documentMode;
