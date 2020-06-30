@@ -1,6 +1,8 @@
 # correctionCopiesEnLigne
 Outil de correction de copies en ligne avec barème
 
+![](https://raw.githubusercontent.com/yannicklebras/correctionCopiesEnLigne/master/ccel.png)
+
 Cet outil s'appuie sur PDSJsAnnotations de Ravisha Hesh (https://github.com/RavishaHesh/PDFJsAnnotations)
 Il utilise PDF.js, jsPDF, Fabric.js principalement, pour l'ouverture de pdfs, l'enregistrement et l'annotation des pages.
 
