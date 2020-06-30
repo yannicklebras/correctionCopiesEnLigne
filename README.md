@@ -54,12 +54,12 @@ Le format de barème retenu pour le moment est le suivant. Il s'agit d'un fichie
         },
         {...}
         ],
-        "annotations":[]
+    "annotations":[]
 }
 ```
 
 Les points sont attribués sur chaque item entre 0 et ```points``` avec un pas de ```pas```. Par exemple pour un item noté sur 2 avec un pas de 0.5 on pourra attribuer 0, 0.5, 1, 1.5, 2. 
-
+La partie annotations reste vide à l'initialisation. Elle sera alimentée lors de l'enregistrement d'une copie.
 
 
 Reste à faire :
