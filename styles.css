@@ -1,0 +1,222 @@
+/*canvas, .canvas-container {
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+*/
+
+button:focus {
+    outline: 0;
+}
+
+.toolbar .tool {
+    display: inline-block;
+    color: #fff;
+    height: 50px;
+    padding-top: 10px;
+    padding-left: 10px;
+    margin-right: 5px;
+}
+
+.toolbar .tool label,
+.toolbar .tool select,
+.toolbar .tool input {
+    display: inline-block;
+    width: auto;
+    height: auto !important;
+    padding: 0;
+
+}
+
+.toolbar .tool input {
+    width: 50px;
+}
+
+.toolbar .tool .color-tool {
+    height: 25px;
+    width: 25px;
+    border-radius: 25px;
+    border: 0;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.toolbar .tool .color-tool.active {
+    -webkit-box-shadow: 3px 4px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 3px 4px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 3px 4px 5px 0px rgba(0,0,0,0.75);
+}
+
+.toolbar .tool:nth-last-child(1) {
+    float: right;
+}
+.toolbar .tool:nth-last-child(2) {
+    float: right;
+}
+.toolbar .tool:nth-last-child(3) {
+    float: right;
+}
+
+
+.toolbar .tool .tool-button {
+    background-color: rgb(50, 54, 57);
+    border: 1px solid rgb(50, 54, 57);
+    color: #fff;
+    cursor: pointer;
+}
+
+.toolbar .tool .tool-button:hover,
+.toolbar .tool .tool-button.active {
+    background-color: rgb(82, 86, 89);
+    border-color: rgb(82, 86, 89);
+}
+
+
+
+body {
+    background-color: rgb(82, 86, 89);
+}
+
+#wrap {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border: 3px solid #444;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.toolbar {
+    width: 100%;
+/*    height:100px;*/
+    background-color: rgb(50, 54, 57);
+}
+
+#main {
+  display:flex;
+  overflow:hidden;
+  flex:1;
+}
+
+#pdf-container {
+/*    margin-top: 100px;*/
+    flex:4;
+    padding-top: 20px;
+    padding-left: 10px;
+    text-align: center;
+    /*flex-shrink:1;
+    flex-grow:1;*/
+    overflow:scroll;
+}
+
+#wrapBareme {
+	display:flex;
+	flex-direction:column;
+	flex:0 0 300px
+}
+
+
+#bareme {
+    flex:1;
+    background-color:#CCC;
+    overflow:scroll;
+    padding-left:5pt;
+    padding-right:5pt;
+    padding-top:5pt;
+    padding-bottom:5pt;
+    font-size:8pt;
+}
+
+#totalenvoi {
+    fex: 0 0 150px;
+    padding-left:5pt;
+    padding-right:5pt;
+    padding-top:5pt;
+    background-color:rgb(50, 54, 57);
+    color:white;
+    font-weight:bolder;;
+    height:100px;
+}
+
+#totalenvoi input {
+    width:3em;
+    border:none;
+    background-color:rgb(50,54,57);
+    color:white;
+    font-weight:bolder;
+    text-align:right;
+}
+
+#totalenvoi textarea {
+    width:100%;
+    height:50px;
+    resize:none; 
+    font-size:8pt
+}
+
+
+
+
+.commentaire {
+    resize:vertical;
+    width:100%;
+    font-size:8pt;	
+}
+
+
+.itemsnotation{
+    margin-bottom:0pt;;
+}
+
+#bareme p{
+    margin:0 0 0 0;
+}
+
+#bareme>div:nth-of-type(odd) {
+  background: #e0e0e0;
+}
+
+#bareme>div:nth-of-type(even) {
+  background: #CFFAFB;
+}
+
+
+.numeroQuestion {
+display:contents;
+}
+
+#bareme .description {
+    display:contents;
+}
+
+
+input[type=range] {
+  -webkit-appearance: none;     /*nécessaire pour Chrome */
+  padding: 0;                   /* nécessaire pour IE */
+  font: inherit;                /* même rendu suivant font document */
+  outline: none;
+  color: #069;                  /* sert pour couleur de référence, via currentColor, pour le curseur */
+  opacity: .8;
+  background: #CCC;             /* sert pour couleur de fond de la zone de déplacement */
+  box-sizing: border-box;       /* même modèle de boîte pour tous */
+  transition: opacity .2s;
+  cursor: pointer;
+  height:5pt;;
+}
+
+
+.modal-backdrop.show {
+    opacity: 0.7
+}
+
+
+#donneesEleve {
+    border:solid 1pt;
+    font-size:8pt;
+}
+
+#donneesEleve legend {
+    width:unset;
+    font-size:10pt;
+}

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+	<link rel="stylesheet" href="./styles.css">
+	<link rel="stylesheet" href="./pdfannotate.css">
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script>
+	MathJax = {
+  		tex: {
+    		inlineMath: [['$', '$'], ['\\(', '\\)']]
+  		}
+	};
+	</script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script></head>
+<body>
+
+<div id="wrap">
+<div class="toolbar">
+		<div class="tool">
+		<label for="">Épaisseur</label>
+		<input type="number" class="form-control text-right" value="1" id="brush-size" max="50">
+	</div>
+	<div class="tool">
+		<label for="">Police</label>
+		<select id="font-size" class="form-control">
+			<option value="10">10</option>
+			<option value="12">12</option>
+			<option value="16" selected>16</option>
+			<option value="18">18</option>
+			<option value="24">24</option>
+			<option value="32">32</option>
+			<option value="48">48</option>
+			<option value="64">64</option>
+			<option value="72">72</option>
+			<option value="108">108</option>
+		</select>
+	</div>
+	<div class="tool">
+		<button class="color-tool active" style="background-color: #212121;"></button>
+		<button class="color-tool" style="background-color: red;"></button>
+		<button class="color-tool" style="background-color: blue;"></button>
+		<button class="color-tool" style="background-color: green;"></button>
+		<button class="color-tool" style="background-color: yellow;"></button>
+	</div>
+	<div class="tool">
+		<button class="tool-button active"><i class="fa fa-hand-paper-o" title="Free Hand" onclick="enableSelector(event)"></i></button>
+	</div>
+	<div class="tool">
+		<button class="tool-button"><i class="fa fa-pencil" title="Pencil" onclick="enablePencil(event)"></i></button>
+	</div>
+	<div class="tool">
+		<button class="tool-button"><i class="fa fa-font" title="Add Text" onclick="enableAddText(event)"></i></button>
+	</div>
+	<div class="tool">
+		<button class="tool-button"><i class="fa fa-long-arrow-right" title="Add Arrow" onclick="enableAddArrow(event)"></i></button>
+	</div>
+	<div class="tool">
+		<button class="tool-button"><i class="fa fa-square-o" title="Add rectangle" onclick="enableRectangle(event)"></i></button>
+	</div>
+	<div class="tool">
+		<button class="tool-button"><i class="fa fa-smile-o" title="Add smile" onclick="enableStamp(event,'smile-o')"></i></button>
+	</div>
+	<div class="tool">
+		<button class="tool-button"><i class="fa fa-frown-o" title="Add smile" onclick="enableStamp(event,'frown-o')"></i></button>
+	</div>
+	<div class="tool">
+		<button class="tool-button"><i class="fa fa-search-minus" title="zoom -" onclick="zoom(event,-1)"></i></button>
+	</div>
+	<div class="tool">
+		<button class="tool-button"><i class="fa fa-search-plus" title="zoom +" onclick="zoom(event,1)"></i></button>
+	</div>
+	<div class="tool">
+		<button class="btn btn-danger btn-sm" onclick="deleteSelectedObject(event)"><i class="fa fa-trash"></i></button>
+	</div>
+	<div class="tool">
+		<button class="btn btn-light btn-sm" onclick="savePDF()" title="Enregstrer le PDF"><i class="fa fa-file-pdf-o"></i></button>
+	</div>
+	<div class="tool">
+		<button class="btn btn-light btn-sm" onclick="saveJSON()" title="Sauver les annotations et le barème"><i class="fa fa-save"></i></button>
+	</div>
+	<div class="tool">
+		<button class="btn btn-light btn-sm" onclick="loadJSON()" title="Charger les annotations et le barème"><i class="fa fa-folder-open-o"></i></button>
+		<input type=file style="display:none" id="loadjson">
+	</div>
+</div>
+
+<div id="main">
+<div class="column left" id="pdf-container"></div>
+<div id="wrapBareme">
+    <div class="column right" id="bareme"><p style="text-align:center;font-weight:bold;font-size:10pt">Barème</p></div>
+    <div id="totalenvoi"></div>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="dataModalLabel">PDF annotation data</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<pre class="prettyprint lang-json linenums">
+				</pre>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="ouvrirModal" tabindex="-1" role="dialog" aria-labelledby="ouvrirModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="dataModalLabel">Ouvrir une copie</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>
+				<form action="" id="formulaireOuverture">
+
+					fichier pdf : <input type="file" id="ouvrirpdf" accept=".pdf" required><br/>
+					fichier bareme : <input type="file" id="ouvrirbareme" accept=".json" required><br/>
+					<input type=submit value=Ouvrir>
+				</p>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="modal fade" id="attendreModal" tabindex="-1" role="dialog" aria-labelledby="attendreModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                        <div class="modal-body">
+				Chargement en cours...
+                        </div>
+                </div>
+        </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.328/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.6.3/fabric.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<script src="./arrow.fabric.js"></script>
+<script charset="UTF-8" src="./pdfannotate.js"></script>
+<script src="./script.js"></script>
+<script src="./scriptBareme.js"></script>
+<script language=javascript>
+$(document).ready(function(){
+    PR.prettyPrint();
+    $("#formulaireOuverture").submit(function(){ouvrirFichiers();return false;});
+    $("#ouvrirModal").modal({backdrop:"static",keyboard:false}); 
+    $("#ouvrirModal .close").css("display","none");
+    $("#ouvrirModal").css("opacity","0.0001 !important");
+    $("#ouvrirModal").modal("show");
+    });
+</script>
+</body>
+</html>
