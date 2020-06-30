@@ -53,7 +53,8 @@ Le format de barème retenu pour le moment est le suivant. Il s'agit d'un fichie
             ]
         },
         {...}
-        ]
+        ],
+        "annotations":[]
 }
 ```
 
