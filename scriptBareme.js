@@ -45,7 +45,7 @@ chargerJsonBareme = function(json){
 		codeQuestion+="</div>";
 		$("#bareme").append(codeQuestion);
 	}
-	$("#totalenvoi").append("<p><label>Total : <input type=text class=\"total\"></label>/"+maximum+"<br/><textarea rows=\"5\" id=\"appreciation\" name=\"commentaireGeneral\" placeholder=\"Appréciation générale\">"+json["appreciation"]+"</textarea></p>");
+	$("#totalenvoi").append("<p><label>Total : <input type=text id=\"total\" class=\"total\"></label>/"+maximum+"<input type=hidden id=\"maximum\" value=\""+maximum+"\"<br/><textarea rows=\"5\" id=\"appreciation\" name=\"commentaireGeneral\" placeholder=\"Appréciation générale\">"+json["appreciation"]+"</textarea></p>");
 
 //mise à jour des points pour chaque range
 $(function()
@@ -118,7 +118,7 @@ function ouvrirFichiers(event) {
 
 
 
-function addWrappedText({text, textWidth, doc, fontSize = 10, fontType = 'normal', lineSpacing = 7, xPosition = 10, initialYPosition = 10, pageWrapInitialYPosition = 10}) {
+function addWrappedText({text, textWidth, doc, fontSize = 10, fontType = 'normal', lineSpacing = 7, xPosition = 10, initialYPosition = 10, pageWrapInitialYPosition = 20}) {
   var textLines = doc.splitTextToSize(text, textWidth); // Split the text into lines
   var pageHeight = doc.internal.pageSize.height;        // Get page height, well use this for auto-paging
   doc.setFontType(fontType);
@@ -134,6 +134,5 @@ function addWrappedText({text, textWidth, doc, fontSize = 10, fontType = 'normal
     doc.text(xPosition, cursorY, lineText);
     cursorY += lineSpacing;
   })
+  return cursorY-1*lineSpacing;
 }
-
-

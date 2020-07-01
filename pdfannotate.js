@@ -210,29 +210,90 @@ PDFAnnotate.prototype.deleteSelectedObject = function () {
 	}
 }
 
+
+
+
+PDFAnnotate.prototype.baremeToPdf= function(bareme,total,pdf) {
+	var pageWidth = 8.27,
+  		lineHeight = 1.2,
+  		margin = 0.5,
+  		maxLineWidth = pageWidth - margin * 2,
+  		fontSize = 12,
+  		ptsPerInch = 72,
+  		oneLineHeight = (fontSize * lineHeight) / ptsPerInch;
+	var lineSpacing=14;
+	var nomDS = bareme.find("#nomDS").val();
+	var dateDS = bareme.find("#dateDS").val();
+	var classeDS = bareme.find("#classeDS").val();
+	var nomEleve = bareme.find("#nomEleve").val();
+	var prenomEleve = bareme.find("#prenomEleve").val();
+	var appreciation = total.find("#appreciation").val();
+	var note = total.find("#total").val()+"/"+total.find("#maximum").val();
+	pdf.setFontSize(15);
+	pdf.text(nomEleve+" "+prenomEleve,pdf.internal.pageSize.width/2,20,'center');
+	var textGeneral = "Note : "+note+"\nAppréciation : "+appreciation+"\n";
+	pdf.setFontSize(fontSize);
+	pdf.setLineHeightFactor(lineHeight);
+	//textGeneral = pdf.splitTextToSize(textGeneral,pdf.internal.pageSize.width-20)
+	//pdf.text(textGeneral,10,30);
+	var textHeight = addWrappedText({text:textGeneral,textWidth:pdf.internal.pageSize.width-20,doc:pdf,fontSize:fontSize,lineSpacing:lineSpacing,xPosition:10,initialYPosition:40});
+	pdf.line(0,textHeight-0.5*lineSpacing,pdf.internal.pageSize.width,textHeight-0.5*lineSpacing);
+	pdf.line(0,textHeight-0.4*lineSpacing,pdf.internal.pageSize.width,textHeight-0.4*lineSpacing);
+	textHeight += lineSpacing;
+	var questions = $("#bareme").find(".bloc_question")
+
+	for (bloc_question of questions) {
+		var numero = $(bloc_question).find(".numeroQuestion").text();
+		var commentaire = $(bloc_question).find(".commentaire").val();
+		textHeight = addWrappedText({text:"Question "+numero+" : "+commentaire,textWidth:pdf.internal.pageSize.width-20,doc:pdf,fontSize:fontSize,lineSpacing:lineSpacing,xPosition:10,initialYPosition:textHeight+0.5*lineSpacing});
+		textHeight += lineSpacing;
+		var items = $(bloc_question).find(".itemsnotation");
+		for (item of items) {
+			var note = $(item).find(".range").val();
+			var maxi = $(item).find(".maxi").val();
+			var description = $(item).find(".descript").val();
+			var widthscore = pdf.getTextWidth(note+"/"+maxi);
+			var widthdescription = pdf.getTextWidth(description+" : ");
+			var points = "";
+			var altern = true;
+			while (pdf.getTextWidth(points)<pdf.internal.pageSize.width-40-widthscore-widthdescription) {
+				if (altern) 
+				    points+="."
+				else 
+				    points+=" "
+				altern = !altern;
+			}
+			textHeight = addWrappedText({text:description+" : "+points+note+"/"+maxi,textWidth:pdf.internal.pageSize.width-20,doc:pdf,fontSize:fontSize,lineSpacing:lineSpacing,xPosition:20,initialYPosition:textHeight});
+			textHeight += lineSpacing;
+		}
+		pdf.line(0,textHeight-0.5*lineSpacing,pdf.internal.pageSize.width,textHeight-0.5*lineSpacing);
+		textHeight +=lineSpacing*0.5;
+	};
+
+}
+
+
+
+
+
 PDFAnnotate.prototype.savePdf = function () {
 	var inst = this;
-	var doc = new jsPDF();
-	var elementHandler = {
-      		'#ignorePDF': function (element, renderer) {
-        		return true;
-      		}
-    	};
-	html2canvas($("#bareme")[0],{onrendered:function (bareme) {
-	bareme.getContext("2d");
-	var imgData = bareme.toDataURL("image/jpeg", 1.0);
-	doc.addImage(imgData,"jpg",0,0);
-	doc.addPage();
+	var ancZoom = inst.currentZoom;
+	inst.zoom(10*(1-inst.currentZoom));
+	var doc = new jsPDF("p","pt","a4");
+	inst.baremeToPdf($("#bareme"),$("#totalenvoi"),doc);
 	$.each(inst.fabricObjects, function (index, fabricObj) {
-	    if (index != 0) {
-	        doc.addPage();
-	        doc.setPage(index + 1);
+	    if (index != -1) {
+	        doc.addPage([fabricObj.width/1.33333333333,fabricObj.height/1.3333333333]); //1.3 permet de passer des pixels aux pts
+	        doc.setPage(index + 2);
 	    }
-	    doc.addImage(fabricObj.toDataURL({format:"jpeg",quality:0.9}), 'jpg', 0, 0);
+
+	    doc.addImage(fabricObj.toDataURL({format:'jpeg',quality:0.95,scale:1/inst.currentZoom}), 'jpg', 0, 0);
 	});
 	doc.save('CopieAnnotee.pdf');
-	}
-	});
+	inst.zoom(10*(ancZoom-1));
+//	}
+//	});
 };
 
 
@@ -278,8 +339,10 @@ PDFAnnotate.prototype.makeJSON = function (){
 			"pas":"",
 			"note":"",
 			"type":""};
-	
+	var ancZoom=inst.currentZoom;
+	inst.zoom(10*(1-inst.currentZoom));
 	jsonbase["annotations"]=inst.fabricObjects;
+	inst.zoom(10*(ancZoom-1));
 	$(".bloc_question").each(function() {
 		var bloc_question=this;
 		var question = {"numero":"",
@@ -388,3 +451,4 @@ PDFAnnotate.prototype.loadFromJSON = function(jsonDataRaw) {
 	})
 	$("#attendreModal").modal("hide");
 }
+
