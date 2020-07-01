@@ -285,7 +285,7 @@ PDFAnnotate.prototype.savePdf = function () {
 	$.each(inst.fabricObjects, function (index, fabricObj) {
 	    if (index != -1) {
 	        doc.addPage([fabricObj.width/1.33333333333,fabricObj.height/1.3333333333]); //1.3 permet de passer des pixels aux pts
-	        doc.setPage(index + 2);
+//	        doc.setPage(index + 2);
 	    }
 
 	    doc.addImage(fabricObj.toDataURL({format:'jpeg',quality:0.95,scale:1/inst.currentZoom}), 'jpg', 0, 0);
