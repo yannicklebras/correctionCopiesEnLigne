@@ -75,8 +75,9 @@ var PDFAnnotate = function(container_id, url, options = {},annotations) {
 				})
 			}
 	        fabricObj.setBackgroundImage(background, fabricObj.renderAll.bind(fabricObj));
-	        $(fabricObj.upperCanvasEl).click(function (event) {
-	            inst.active_canvas = index;
+	        $(fabricObj.upperCanvasEl).on('pointerdown',function (event) {
+	            //event.preventDefault();
+		    inst.active_canvas = index;
 	            inst.fabricClickHandler(event, fabricObj);
 			});
 			fabricObj.on('after:render', function () {
@@ -97,9 +98,13 @@ var PDFAnnotate = function(container_id, url, options = {},annotations) {
 	    if (inst.active_tool == 5) {
 		var smiley = "";
 		if (inst.type=="smile-o") {
-		    smiley="smile.png";
+		    smiley="tampons/smile.png";
 		} else if (inst.type=="frown-o") {
-		    smiley="frown.png";
+		    smiley="tampons/frown.png";
+		} else if (inst.type=="check") {
+		    smiley="tampons/checkmark.png";
+		} else if (inst.type=="cross") {
+		    smiley="tampons/redcross.png";
 		}
 	        var text = new fabric.Image.fromURL(smiley,function(image){
 	            image.set({left: posx-25,
@@ -108,7 +113,7 @@ var PDFAnnotate = function(container_id, url, options = {},annotations) {
 		    image.scaleToWidth(50);
 		    fabricObj.add(image);
 	        });
-	        inst.active_tool = 0;
+//	        inst.active_tool = 0;
             }
 	    if (inst.active_tool == 2) {
 	        var text = new fabric.IText('Sample text', {
