@@ -23,7 +23,7 @@ chargerJsonBareme = function(json){
 	var maximum = 0;
 	for (var question of questions) {
 		var codeQuestion = "";
-		codeQuestion+="<div class=\"bloc_question\"><p class=\"question\"><div>Question&nbsp;:&nbsp;<div class=\"numeroQuestion\">"+question["numero"]+"</div></div></p>";
+		codeQuestion+="<div class=\"bloc_question\"><p class=\"question\"><div class=\"recherche-page\"><i class=\"fa fa-hand-o-left\"></i></div><div class=\"titre-question\">&nbsp;Question&nbsp;:&nbsp;<div class=\"numeroQuestion\">"+question["numero"]+"</div></div></p>";
 		codeQuestion+="<textarea class=\"commentaire\" placeholder=\"commentaire pour cette question\">"+question["commentaire"]+"</textarea>";
 		for (var item of question["items"]) {
 			codeQuestion+="<div class=\"itemsnotation\"><div class=\"description\">"+item["description"]+"</div><br/>";
@@ -36,6 +36,7 @@ chargerJsonBareme = function(json){
 			else
 				codeQuestion+="<input data-html2canvas-ignore=\”true\” type=\"range\" class=\"range\" \"min=\"0\" max=\""+maxi+"\" step=\""+step+"\" value=\""+note+"\"><output class=\"range_label\"></output>";
 				codeQuestion+="/"+maxi;
+			codeQuestion+="<input type=hidden value=\"\" class=\"position\">";
 			codeQuestion+="<input type=hidden value=\""+item["description"]+"\" class=\"descript\">";
 			codeQuestion+="<input type=hidden value=\""+step+"\" class=\"step\">";
 			codeQuestion+="<input type=hidden value=\""+maxi+"\" class=\"maxi\">";
@@ -46,7 +47,19 @@ chargerJsonBareme = function(json){
 		$("#bareme").append(codeQuestion);
 	}
 	$("#totalenvoi").append("<p><label>Total : <input type=text id=\"total\" class=\"total\"></label>/"+maximum+"<input type=hidden id=\"maximum\" value=\""+maximum+"\"<br/><textarea rows=\"5\" id=\"appreciation\" name=\"commentaireGeneral\" placeholder=\"Appréciation générale\">"+json["appreciation"]+"</textarea></p>");
-
+	$(".recherche-page").on("mousedown",function() {
+		var bloc=$(this).parent();
+		var posScroll= $(bloc).find(".position").val();
+		if (posScroll != "") {
+			$("#pdf-container").scrollTop(posScroll);
+		}
+	});
+	$(".bloc_question").find("*").on("change",function(){
+		var bloc = $(this).parent();
+		var scroll = $("#pdf-container").scrollTop();
+		$(bloc).find(".position").val(scroll);
+		$(bloc).find(".recherche-page").css("cursor","pointer");
+	});
 //mise à jour des points pour chaque range
 $(function()
 {
@@ -136,3 +149,6 @@ function addWrappedText({text, textWidth, doc, fontSize = 10, fontType = 'normal
   })
   return cursorY-1*lineSpacing;
 }
+
+
+
