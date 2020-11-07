@@ -1,0 +1,228 @@
+<html>
+
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+  input[type="number"] {
+    width:6 0px
+  }
+  .indication {
+    color:green
+  }
+  .question {
+    border:solid lightgray 1pt;
+    padding:3pt
+  }
+  .genererJSON {
+    width:100%
+  }
+  .intro {
+    font-style:italic;
+    color:gray;
+  }
+</style>
+</head>
+
+<body>
+  <span class="intro">Entrez les informations relatives à votre devoir, puis cliquez sur "ajouter une question au début".
+  À chaque fois que vous ajoutez une question il faut ajouter au moins un critère d'évaluation (item) sur cette question.
+  Pour chaque item, vous devez définir l'intitulé de l'item (par exemple : "Méthode connue" ou "dates correctes"...),
+  le nombre de points que cet item rapporte et le pas d'attribution de ces points (par exemple un item rapporte 4 points qu'on
+  peut distribuer de 1 en 1, ou bien 1 point découpé en 0.25). A la fin de votre barème, vous cliquez sur "Générer le fichier de barème".
+  Le fichier est alors téléchargé sur votre machine et vous pouvez l'utiliser dans votre correction. Attention, pour le moment il n'y a pas
+  de moyen de modifier un barème déjà téléchargé. Je vous conseille donc de garder cette page ouverte.</span><br>
+  Nom du devoir : <input type=text required id="nomDevoir"><br>
+  Date du devoir : <input type=text required id="dateDevoir"><br>
+  Classe : <input type=text required id=classeDevoir><br>
+  Heure du devoir : <input type=text required id=heureDevoir><br>
+  Durée du devoir : <input type=text require id=dureeDevoir><br>
+<input type=button class=ajouterDebut value="ajouter une question au début">
+
+<div id="questions">
+</div>
+<input width=100% type=button class=genererJSON value="Générer le fichier de barème">
+</body>
+<script language=javascript>
+
+
+function getRandomColor() {
+    var letters = '789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 9)];
+    }
+    return color;
+}
+
+
+function ajouterQuestion() {
+return `<div class="question">
+Question : <input type=text id="titreQuestion" required><span class=indication>&nbsp;&nbsp;par exemple numéro de la question</span><br>
+<table style="opacity:0">
+  <thead>
+  <tr>
+    <th>description de l'item<br>d'évaluation</th>
+    <th>nombre de<br>points</th>
+    <th>pas de l'évaluation<br>(ex : de 0.5 en 0.5)</th>
+    <th>type de question</th>
+    <th>action</th>
+  </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<input type=button class="ajouterApres" value="ajouter une question après">
+<input type=button class="ajouterAvant" value="ajouter une question avant">
+<input type=button class="ajouterItem" value="ajouter un item">
+<input type=button class="supprimerQuestion" value="supprimer la question">
+</div>
+`;
+}
+
+function ajouterQuestionApres(bouton) {
+  codeQuestion = ajouterQuestion();
+  $(bouton).closest("div").after(codeQuestion);
+  couleursQuestions();
+
+}
+
+function ajouterQuestionAvant(bouton) {
+  codeQuestion = ajouterQuestion();
+  $(bouton).closest("div").before(codeQuestion);
+  couleursQuestions();
+}
+
+function ajouterQuestionDebut(bouton) {
+  codeQuestion = ajouterQuestion();
+  $("#questions").prepend(codeQuestion);
+  couleursQuestions();
+}
+
+function couleursQuestions() {
+  $(".question").each(function(index){
+  if (index%2==1) {
+    $(this).css("background-color","lightgray");
+  } else {
+    $(this).css("background-color","white");
+  }
+});
+}
+
+function ajouterItem() {
+return `<tr class=items>
+  <td><input type=text id=descriptionItem required></td>
+  <td><input type=number step=0.25 id=nombrePoints></td>
+  <td><input type=number step=0.25 id=pasPoints></td>
+  <td><input type=text id=typeQuestion></td>
+  <td><input type=button class="corbeille" value="&#128465;" title="supprimer"></td>
+</tr>`;
+}
+
+function ajouterItemFin(bouton) {
+    codeItem = ajouterItem() ;
+    tableau = $(bouton).closest("div").children("table");
+    tableau.children("tbody:last-child").append(codeItem);
+    tableau.css("opacity","1");
+}
+
+function supprimerItem(item) {
+  tableau = $(item).closest("table");
+  $(item).closest("tr").remove();
+  if (items==1) {
+    tableau.css("opacity","0");
+  }
+}
+
+function supprimerQuestion(bouton) {
+  $(bouton).closest("div").remove();
+  couleursQuestions()  ;
+}
+
+
+
+function genererJSON () {
+  var json = {
+    "nom":$("#nomDevoir").val(),
+    "date":$("#dateDevoir").val(),
+    "classe":$("#classeDevoir").val(),
+    "heure":$("#heureDevoir").val(),
+    "duree":$("dureeDevoir").val(),
+    "nomEleve":"",
+    "prenomEleve":"",
+    "corrige":false,
+    "appreciation":"",
+    "bareme":[],
+    "annotations":""
+  } ;
+  var jsonitem = {"description":"",
+			"points":"",
+			"pas":"",
+			"note":"",
+			"type":""};
+  $(".question").each(function() {
+    question=$(this);
+    alert();
+    var jsonquestion = {"numero":question.children("#titreQuestion").val(),
+          "commentaire":"",
+          "items":[]};
+    question.find(".items").each(function(){
+      var jsonitem = {"description":$(this).find("#descriptionItem").val(),
+    			"points":$(this).find("#nombrePoints").val(),
+    			"pas":$(this).find("#pasPoints").val(),
+    			"note":"0",
+    			"type":$(this).find("#typeQuestion").val()};
+      jsonquestion["items"].push(jsonitem);
+      alert();
+    });
+    json["bareme"].push(jsonquestion);
+  });
+  var text = JSON.stringify(json,null,4);
+  var name = "Bareme.json";
+  var type = "application/json";
+  var file = new Blob([text], {type: type});
+        var isIE = /*@cc_on!@*/false || !!document.documentMode;
+        if (isIE)
+        {
+            window.navigator.msSaveOrOpenBlob(file, name);
+        }
+        else
+        {
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(file);
+            a.download = name;
+            a.click();
+        }
+alert(json);
+}
+
+
+$("body").on("click",".ajouterApres",function(){
+  ajouterQuestionApres(this);
+});
+$("body").on("click",".ajouterAvant",function(){
+  ajouterQuestionAvant(this);
+});
+$("body").on("click",".ajouterDebut",function(){
+  ajouterQuestionDebut(this);
+});
+$("body").on("click",".ajouterItem",function(){
+  ajouterItemFin(this);
+});
+$("body").on("click",".corbeille",function(){
+  supprimerItem(this);
+});
+$("body").on("click",".supprimerQuestion",function(){
+  supprimerQuestion(this);
+});
+$("body").on("click",".genererJSON",function(){
+  genererJSON(this);
+});
+
+
+
+$("document").ready(function() {
+});
+
+</script>
+</html>
