@@ -162,7 +162,7 @@ function genererJSON () {
 			"type":""};
   $(".question").each(function() {
     question=$(this);
-    alert();
+    //alert();
     var jsonquestion = {"numero":question.children("#titreQuestion").val(),
           "commentaire":"",
           "items":[]};
@@ -173,7 +173,7 @@ function genererJSON () {
     			"note":"0",
     			"type":$(this).find("#typeQuestion").val()};
       jsonquestion["items"].push(jsonitem);
-      alert();
+      //alert();
     });
     json["bareme"].push(jsonquestion);
   });
@@ -193,7 +193,7 @@ function genererJSON () {
             a.download = name;
             a.click();
         }
-alert(json);
+//alert(json);
 }
 
 
