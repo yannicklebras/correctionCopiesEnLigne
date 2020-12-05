@@ -31,7 +31,7 @@ chargerJsonBareme = function(json){
 			var step = item["pas"];
 			var maxi = item["points"]
 			maximum += +maxi;
-			if (maxi=="manuel") 
+			if (maxi=="manuel")
 				codeQuestion+="<input type=\"text\" class=\"item manuel\" value=\""+note+"\">";
 			else
 				codeQuestion+="<input data-html2canvas-ignore=\”true\” type=\"range\" class=\"range\" \"min=\"0\" max=\""+maxi+"\" step=\""+step+"\" value=\""+note+"\"><output class=\"range_label\"></output>";
@@ -102,15 +102,19 @@ function ouvrirFichiers(event) {
         $("#attendreModal").modal({backdrop:"static",keyboard:false});
         $("#attendreModal .close").css("display","none");
 	var fichierPDF = $("#ouvrirpdf").get(0).files[0];
+	if ($("#ouvrirbareme").get(0).files.length==0) {
+
+
+	};
 	var fichierJSON = $("#ouvrirbareme").get(0).files[0];
 	var fileReaderPDF = new FileReader();
-        var fileReaderJSON = new FileReader();
+  var fileReaderJSON = new FileReader();
 	var contentJSON = "";
-        fileReaderJSON.onload = function(e) {
-                contentJSON = JSON.parse(e.target.result);
+  fileReaderJSON.onload = function(e) {
+          contentJSON = JSON.parse(e.target.result);
 //		pdf.loadFromJSON(JSON.parse(contents));
 //              chargerJsonBareme(JSON.parse(contents));
-		$("#ouvrirModal").modal("hide");
+					$("#ouvrirModal").modal("hide");
 	        fileReaderPDF.readAsArrayBuffer(fichierPDF);
        	};
 	fileReaderPDF.onload = function() {
@@ -149,6 +153,3 @@ function addWrappedText({text, textWidth, doc, fontSize = 10, fontType = 'normal
   })
   return cursorY-1*lineSpacing;
 }
-
-
-

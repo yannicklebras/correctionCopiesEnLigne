@@ -41,17 +41,17 @@
 		</select>
 	</div>
 	<div class="tool">
-		<button class="color-tool active" style="background-color: #212121;"></button>
-		<button class="color-tool" style="background-color: red;"></button>
+		<button class="color-tool" style="background-color: #212121;"></button>
+		<button class="color-tool active" style="background-color: red;"></button>
 		<button class="color-tool" style="background-color: blue;"></button>
 		<button class="color-tool" style="background-color: green;"></button>
 		<button class="color-tool" style="background-color: yellow;"></button>
 	</div>
 	<div class="tool">
-		<button class="tool-button active"><i class="fa fa-hand-paper-o" title="Free Hand" onclick="enableSelector(event)"></i></button>
+		<button class="tool-button"><i class="fa fa-hand-paper-o" title="Free Hand" onclick="enableSelector(event)"></i></button>
 	</div>
 	<div class="tool">
-		<button class="tool-button"><i class="fa fa-pencil" title="Pencil" onclick="enablePencil(event)"></i></button>
+		<button class="tool-button active"><i class="fa fa-pencil" title="Pencil" onclick="enablePencil(event)"></i></button>
 	</div>
 	<div class="tool">
 		<button class="tool-button"><i class="fa fa-font" title="Add Text" onclick="enableAddText(event)"></i></button>
@@ -135,7 +135,7 @@
 				<form action="" id="formulaireOuverture">
 
 					fichier pdf : <input type="file" id="ouvrirpdf" accept=".pdf" required><br/>
-					fichier bareme : <input type="file" id="ouvrirbareme" accept=".json" required><br/>
+					fichier bareme : <input type="file" id="ouvrirbareme" accept=".json"><br/>
 					<input type=submit value=Ouvrir>
 				</p>
 				</form>
@@ -173,7 +173,7 @@
 $(document).ready(function(){
     PR.prettyPrint();
     $("#formulaireOuverture").submit(function(){ouvrirFichiers();return false;});
-    $("#ouvrirModal").modal({backdrop:"static",keyboard:false}); 
+    $("#ouvrirModal").modal({backdrop:"static",keyboard:false});
     $("#ouvrirModal .close").css("display","none");
     $("#ouvrirModal").css("opacity","0.0001 !important");
     $("#ouvrirModal").modal("show");

@@ -9,11 +9,11 @@ var PDFAnnotate = function(container_id, url, options = {},annotations) {
 	//alert(annotations);
 	this.number_of_pages = 0;
 	this.pages_rendered = 0;
-	this.active_tool = 0; // 1 - Free hand, 2 - Text, 3 - Arrow, 4 - Rectangle
+	this.active_tool = 1; // 1 - Free hand, 2 - Text, 3 - Arrow, 4 - Rectangle
 	this.currentZoom = 1;
 	this.fabricObjects = [];
 	this.fabricObjectsData = [];
-	this.color = '#212121';
+	this.color = '#FF0000';
 	this.borderColor = '#000000';
 	this.borderSize = 2;
 	this.font_size = 16;
@@ -25,7 +25,7 @@ var PDFAnnotate = function(container_id, url, options = {},annotations) {
 	var loadingTask = PDFJS.getDocument(this.url);
 	loadingTask.promise.then(function (pdf) {
 
-	    var scale = 1;
+	    var scale = 1.5;
 	    inst.number_of_pages = pdf.pdfInfo.numPages;
 
 	    for (var i = 1; i <= pdf.pdfInfo.numPages; i++) {
