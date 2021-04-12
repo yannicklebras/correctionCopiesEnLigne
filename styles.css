@@ -202,9 +202,12 @@ input[type=range] {
   box-sizing: border-box;       /* même modèle de boîte pour tous */
   transition: opacity .2s;
   cursor: pointer;
-  height:5pt;;
+  height:10pt;;
 }
 
+input[type=range]:focus {
+  background:#CC0;
+}
 
 .modal-backdrop.show {
     opacity: 0.7

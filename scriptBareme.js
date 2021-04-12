@@ -125,6 +125,7 @@ function ouvrirFichiers(event) {
         					console.log(page, oldData, newData);
     						}
 		},contentJSON["annotations"]);
+		pdf.enablePencil();
 		chargerJsonBareme(contentJSON);
 		//alert("Truc");
 	};

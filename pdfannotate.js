@@ -63,18 +63,20 @@ var PDFAnnotate = function(container_id, url, options = {},annotations) {
 	        var fabricObj = new fabric.Canvas(el.id, {
 	            freeDrawingBrush: {
 	                width: 1,
-	                color: inst.color
+	                color: "#FF0000"
 	            }
 	        });
-			inst.fabricObjects.push(fabricObj);
-			if (typeof options.onPageUpdated == 'function') {
+		inst.fabricObjects.push(fabricObj);
+		if (typeof options.onPageUpdated == 'function') {
 				fabricObj.on('object:added', function() {
 					var oldValue = Object.assign({}, inst.fabricObjectsData[index]);
 					inst.fabricObjectsData[index] = fabricObj.toJSON()
 					options.onPageUpdated(index + 1, oldValue, inst.fabricObjectsData[index]) 
 				})
 			}
-	        fabricObj.setBackgroundImage(background, fabricObj.renderAll.bind(fabricObj));
+	        fabricObj.isDrawingMode=true;
+		fabricObj.freeDrawingBrush.color = "#FF0000";
+		fabricObj.setBackgroundImage(background, fabricObj.renderAll.bind(fabricObj));
 	        $(fabricObj.upperCanvasEl).on('pointerdown',function (event) {
 	            //event.preventDefault();
 		    inst.active_canvas = index;
