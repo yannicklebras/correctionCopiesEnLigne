@@ -77,7 +77,9 @@ var PDFAnnotate = function(container_id, url, options = {},annotations) {
 	        fabricObj.isDrawingMode=true;
 		fabricObj.freeDrawingBrush.color = "#FF0000";
 		fabricObj.setBackgroundImage(background, fabricObj.renderAll.bind(fabricObj));
-	        $(fabricObj.upperCanvasEl).on('pointerdown',function (event) {
+		// Evite le scroll quand on est sur une page
+	        $(fabricObj.upperCanvasEl).on("mousedown",function(e){e.stopPropagation();});
+		$(fabricObj.upperCanvasEl).on('pointerdown',function (event) {
 	            //event.preventDefault();
 		    inst.active_canvas = index;
 	            inst.fabricClickHandler(event, fabricObj);
@@ -448,7 +450,7 @@ PDFAnnotate.prototype.loadFromJSON = function(jsonDataRaw) {
 	jsonData = jsonDataRaw;
 	//alert("hop");
 	$.each(inst.fabricObjects, function (index, fabricObj) {
-		//alert(jsonData.length);
+	//	alert(jsonData.length);
 		if (jsonData.length > index) {
 			//alert("test");
 			fabricObj.loadFromJSON(jsonData[index], function () {
@@ -456,6 +458,7 @@ PDFAnnotate.prototype.loadFromJSON = function(jsonDataRaw) {
 			})
 		}
 	})
+	alert("hip");
 	$("#attendreModal").modal("hide");
 }
 

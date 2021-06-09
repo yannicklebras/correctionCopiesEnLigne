@@ -129,5 +129,27 @@ $(function () {
         var font_size = $(this).val();
         pdf.setFontSize(font_size);
     });
-});
 
+    var clicked = false, clickY,posY;
+    $("#pdf-container,#bareme").on({
+    'mousemove': function(e) {
+	clicked && updateScrollPos(e,$(this));
+    },
+    'mousedown': function(e) {
+	$(this).css("user-select",'none');
+        clicked = true;
+        clickY = e.pageY;
+	posY = $(this).scrollTop();
+    },
+    'mouseup': function(e) {
+        clicked = false;
+        $(this).css('cursor', 'grab');
+	$(this).css("user-select","");
+    }
+    });
+
+var updateScrollPos = function(e,sel) {
+    sel.css('cursor', 'grabbing');
+    sel.scrollTop(posY + (clickY - e.pageY));
+}
+});
