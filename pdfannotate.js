@@ -299,7 +299,9 @@ PDFAnnotate.prototype.savePdf = function () {
 
 	    doc.addImage(fabricObj.toDataURL({format:'jpeg',quality:0.95,scale:1/inst.currentZoom}), 'jpg', 0, 0);
 	});
-	doc.save('CopieAnnotee.pdf');
+	var nomEleve = $("#bareme").find("#nomEleve").val();
+	var prenomEleve = $("#bareme").find("#prenomEleve").val();
+	doc.save(nomEleve+prenomEleve+"Corrige.pdf");
 	inst.zoom(10*(ancZoom-1));
 //	}
 //	});
@@ -310,7 +312,9 @@ PDFAnnotate.prototype.saveJSON = function(){
 	var inst = this;
 	var fichierjson = this.makeJSON();
 	var text = JSON.stringify(fichierjson,null,4);
-	var name = "AnnotationsEtBareme.json";
+	var nomEleve = $("#bareme").find("#nomEleve").val();
+        var prenomEleve = $("#bareme").find("#prenomEleve").val();
+	var name = nomEleve+PrenomEleve+"AnnotationsEtBareme.json";
 	var type = "application/json";
 	var file = new Blob([text], {type: type});
         var isIE = /*@cc_on!@*/false || !!document.documentMode;
@@ -458,7 +462,7 @@ PDFAnnotate.prototype.loadFromJSON = function(jsonDataRaw) {
 			})
 		}
 	})
-	alert("hip");
+//	alert("hip");
 	$("#attendreModal").modal("hide");
 }
 
